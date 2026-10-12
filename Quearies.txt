@@ -1,0 +1,57 @@
+Quearies
+
+1\. Windows Security log collection
+
+index=* host="ANONYMOUS" sourcetype="WinEventLog:Security"
+| stats count by EventCode
+| sort - count
+
+
+2\. SMB activity from Parrot OS
+
+
+index=* host="ANONYMOUS" sourcetype="WinEventLog:Security" EventCode=5145
+| search "192.168.205.133"
+| stats count
+
+
+3\. Identify source IP, account, and share
+
+
+index=* host="ANONYMOUS" sourcetype="WinEventLog:Security" EventCode=5145
+| search "192.168.205.133"
+| table _time Account_Name IpAddress ShareName
+| sort - _time
+
+
+4\. Investigate test file activity
+
+
+index=* host="ANONYMOUS" sourcetype="WinEventLog:Security" EventCode=5145
+| search "192.168.205.133"
+| search "soc-test.txt" OR "suspicious-test.ps1"
+| table _time _raw
+| sort - _time
+
+
+5\. Inspect raw SMB events
+
+
+index=* host="ANONYMOUS" sourcetype="WinEventLog:Security" EventCode=5145
+| search "192.168.205.133"
+| table _time _raw
+| sort - _time
+| head 10
+
+
+6\. Count events associated with the test files
+
+
+index=* host="ANONYMOUS" sourcetype="WinEventLog:Security" EventCode=5145
+| search "192.168.205.133"
+| search "soc-test.txt" OR "suspicious-test.ps1"
+| stats count
+
+
+
+Important: These are the queries that returned results during your investigation. The count may change depending on the selected time range and newly collected events.
